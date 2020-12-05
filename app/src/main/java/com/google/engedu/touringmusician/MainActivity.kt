@@ -12,59 +12,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.engedu.touringmusician
 
-package com.google.engedu.touringmusician;
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
-
-public class MainActivity extends AppCompatActivity {
-
-    private TourMap map;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        LinearLayout layout = (LinearLayout) findViewById(R.id.top_layout);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT, 30.0f);
-        map = new TourMap(this);
-        map.setLayoutParams(params);
-        layout.addView(map, 0);
-        final Button modeButton = (Button) findViewById(R.id.mode_selector);
-        modeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(MainActivity.this, modeButton);
-                popup.getMenuInflater()
-                        .inflate(R.menu.modepopup, popup.getMenu());
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        map.setInsertMode(item.getTitle().toString());
-                        return true;
-                    }
-                });
-
-                popup.show();
+class MainActivity : AppCompatActivity() {
+    private var map: TourMap? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val layout = findViewById<View>(R.id.top_layout) as LinearLayout
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 30.0f
+        )
+        map = TourMap(this)
+        map!!.layoutParams = params
+        layout.addView(map, 0)
+        val modeButton = findViewById<View>(R.id.mode_selector) as Button
+        modeButton.setOnClickListener {
+            val popup = PopupMenu(this@MainActivity, modeButton)
+            popup.menuInflater
+                .inflate(R.menu.modepopup, popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                map!!.setInsertMode(item.title.toString())
+                true
             }
-        });
+            popup.show()
+        }
     }
 
-    public void onReset(View v) {
-        map.reset();
-        TextView message = (TextView) findViewById(R.id.game_status);
-        if (message != null) {
-            message.setText("Tap map to add new tour stops.");
-        }
+    fun onReset(v: View?) {
+        map!!.reset()
+        val message = findViewById<View>(R.id.game_status) as TextView
+        message.text = "Tap map to add new tour stops."
     }
 }

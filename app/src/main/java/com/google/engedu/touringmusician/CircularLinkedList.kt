@@ -12,103 +12,94 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.engedu.touringmusician
 
-package com.google.engedu.touringmusician;
+import android.graphics.Point
 
-
-import android.graphics.Point;
-
-import java.util.Iterator;
-
-public class CircularLinkedList implements Iterable<Point> {
-
-    private class Node {
-        Point point;
-        Node prev, next;
+class CircularLinkedList : Iterable<Point?> {
+    inner class Node {
+        var point: Point? = null
+        var prev: Node? = null
+        var next: Node? = null
         /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+         *
+         * YOUR CODE GOES HERE
+         *
+         */
     }
 
-    Node head;
-
-    public void insertBeginning(Point p) {
+    var head: Node? = null
+    fun insertBeginning(p: Point?) {
         /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+         *
+         * YOUR CODE GOES HERE
+         *
+         */
     }
 
-    private float distanceBetween(Point from, Point to) {
-        return (float) Math.sqrt(Math.pow(from.y-to.y, 2) + Math.pow(from.x-to.x, 2));
+    private fun distanceBetween(from: Point, to: Point): Float {
+        return Math.sqrt(
+            Math.pow(
+                (from.y - to.y).toDouble(),
+                2.0
+            ) + Math.pow((from.x - to.x).toDouble(), 2.0)
+        ).toFloat()
     }
 
-    public float totalDistance() {
-        float total = 0;
+    fun totalDistance(): Float {
         /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
-        return total;
+         *
+         * YOUR CODE GOES HERE
+         *
+         */
+        return 0f
     }
 
-    public void insertNearest(Point p) {
+    fun insertNearest(p: Point?) {
         /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+         *
+         * YOUR CODE GOES HERE
+         *
+         */
     }
 
-    public void insertSmallest(Point p) {
+    fun insertSmallest(p: Point?) {
         /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+         *
+         * YOUR CODE GOES HERE
+         *
+         */
     }
 
-    public void reset() {
-        head = null;
+    fun reset() {
+        head = null
     }
 
-    private class CircularLinkedListIterator implements Iterator<Point> {
-
-        Node current;
-
-        public CircularLinkedListIterator() {
-            current = head;
+    private inner class CircularLinkedListIterator : MutableIterator<Point?> {
+        var current: Node?
+        override fun hasNext(): Boolean {
+            return current != null
         }
 
-        @Override
-        public boolean hasNext() {
-            return (current != null);
-        }
-
-        @Override
-        public Point next() {
-            Point toReturn = current.point;
-            current = current.next;
-            if (current == head) {
-                current = null;
+        override fun next(): Point? {
+            val toReturn = current!!.point
+            current = current!!.next
+            if (current === head) {
+                current = null
             }
-            return toReturn;
+            return toReturn
         }
 
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
+        override fun remove() {
+            throw UnsupportedOperationException()
+        }
+
+        init {
+            current = head
         }
     }
 
-    @Override
-    public Iterator<Point> iterator() {
-        return new CircularLinkedListIterator();
+    override fun iterator(): MutableIterator<Point?> {
+        return CircularLinkedListIterator()
     }
-
-
 }

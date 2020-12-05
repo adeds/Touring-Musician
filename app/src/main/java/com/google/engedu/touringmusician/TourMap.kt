@@ -12,88 +12,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.engedu.touringmusician
 
-package com.google.engedu.touringmusician;
+import android.app.Activity
+import android.content.Context
+import android.graphics.*
+import android.view.MotionEvent
+import android.view.View
+import android.widget.TextView
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.TextView;
-
-public class TourMap extends View {
-
-    private Bitmap mapImage;
-    private CircularLinkedList list = new CircularLinkedList();
-    private String insertMode = "Add";
-
-    public TourMap(Context context) {
-        super(context);
-        mapImage = BitmapFactory.decodeResource(
-                getResources(),
-                R.drawable.map);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawBitmap(mapImage, 0, 0, null);
-        Paint pointPaint = new Paint();
-        pointPaint.setColor(Color.RED);
+class TourMap(context: Context?) : View(context) {
+    private val mapImage: Bitmap
+    private val list = CircularLinkedList()
+    private var insertMode = "Add"
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        canvas.drawBitmap(mapImage, 0f, 0f, null)
+        val pointPaint = Paint()
+        pointPaint.color = Color.RED
         /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
-        for (Point p : list) {
+         *
+         * YOUR CODE GOES HERE
+         *
+         */
+        for (p in list) {
             /**
-             **
-             **  YOUR CODE GOES HERE
-             **
-             **/
-            canvas.drawCircle(p.x, p.y, 20, pointPaint);
+             *
+             * YOUR CODE GOES HERE
+             *
+             */
+            if (p != null) {
+                canvas.drawCircle(p.x.toFloat(), p.y.toFloat(), 20f, pointPaint)
+            }
         }
         /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+         *
+         * YOUR CODE GOES HERE
+         *
+         */
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                Point p = new Point((int) event.getX(), (int)event.getY());
-                if (insertMode.equals("Closest")) {
-                    list.insertNearest(p);
-                } else if (insertMode.equals("Smallest")) {
-                    list.insertSmallest(p);
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                val p = Point(
+                    event.x.toInt(), event.y.toInt()
+                )
+                if (insertMode == "Closest") {
+                    list.insertNearest(p)
+                } else if (insertMode == "Smallest") {
+                    list.insertSmallest(p)
                 } else {
-                    list.insertBeginning(p);
+                    list.insertBeginning(p)
                 }
-                TextView message = (TextView) ((Activity) getContext()).findViewById(R.id.game_status);
+                val message = (context as Activity).findViewById<View>(R.id.game_status) as TextView
                 if (message != null) {
-                    message.setText(String.format("Tour length is now %.2f", list.totalDistance()));
+                    message.text = String.format("Tour length is now %.2f", list.totalDistance())
                 }
-                invalidate();
-                return true;
+                invalidate()
+                return true
+            }
         }
-        return super.onTouchEvent(event);
+        return super.onTouchEvent(event)
     }
 
-    public void reset() {
-        list.reset();
-        invalidate();
+    fun reset() {
+        list.reset()
+        invalidate()
     }
 
-    public void setInsertMode(String mode) {
-        insertMode = mode;
+    fun setInsertMode(mode: String) {
+        insertMode = mode
+    }
+
+    init {
+        mapImage = BitmapFactory.decodeResource(
+            resources,
+            R.drawable.map
+        )
     }
 }
